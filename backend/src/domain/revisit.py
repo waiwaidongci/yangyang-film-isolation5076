@@ -15,8 +15,9 @@ def build_revisit_rows(shift_scores, reference):
     for row in shift_scores:
         by_change[row['change_id']].append(row)
 
-    # 分数名次已决定批次顺序。同一换槽批次以最高分控制条为主单。
-    active = [rows for rows in by_change.values() if rows[0]['triage'] != '未触发']
+    # 分数名次已决定批次顺序。同一换槽批次以最高分控制条为主单；校准不足的
+    # 待核批次进入单独审计表，不派发没有阈值依据的复测时限。
+    active = [rows for rows in by_change.values() if rows[0]['triage'] in RESPONSE_TIME]
     if not active:
         return []
 
@@ -39,6 +40,7 @@ def build_revisit_rows(shift_scores, reference):
             'tank_id': primary['tank_id'],
             'strip_id': primary['id'],
             'sampled_at': primary['sampled_at'],
+            'strip_count': primary.get('strip_count', len(rows)),
             'score': primary['score'],
             'current_hits': sum(row['current_hit'] for row in rows),
             'strip_count': len(rows),

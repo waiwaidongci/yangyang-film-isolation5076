@@ -10,6 +10,9 @@ class Role(StrEnum):
 class RunStatus(StrEnum):
     COMPLETED = 'completed'
     FAILED = 'failed'
+    PENDING = 'pending'
+    PENDING_VERIFICATION = 'pending_verification'
+    STALE = 'stale'
 
 
 class Decision(StrEnum):

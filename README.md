@@ -23,7 +23,8 @@ API 默认监听 `127.0.0.1:19348`。接口文档在 `/api/docs`，机器可读�
 1. `POST /api/auth/login` 接收带 `email`、`password` 的 JSON。后续业务请求通过 `Authorization: Bearer <access_token>` 鉴权。
 2. `GET /api/spec` 查看 CSV 列、参数和结果口径。`GET /api/datasets` 查找演示台账，或用 `POST /api/datasets` 提交带 `name`、`csv` 的 JSON。
 3. `POST /api/runs` 提交 `dataset_id`、`label` 和可选的 `settings`。响应包含运行 ID 及最终状态。`GET /api/runs/{id}` 返回业务指标、表格或失败原因。
-4. 负责人调用 `POST /api/runs/{id}/review`，提交 `decision`（`approved` 或 `rejected`）和 `note`。批准后可通过 `GET /api/runs/{id}/export/{table_key}` 下载业务表。表名和字段从运行结果取得。
+4. 晚到的历史校准条可调用 `POST /api/datasets/{dataset_id}/supplement`，请求体传 `csv` 或 `rows/records`；记录必须带原 `reference_cal` 批次。接口递增台账版本、原地重算未签核运行，并保留已签核运行的原结果与摘要。
+5. 负责人调用 `POST /api/runs/{id}/review`，提交 `decision`（`approved` 或 `rejected`）和 `note`；并发补录时可附带所见的 `source_version` 与 `basis_digest`，也可用 `If-Match`/`X-Basis-*` 头。批准后可通过 `GET /api/runs/{id}/export/{table_key}` 下载业务表。表名和字段从运行结果取得。
 
 ## 代码与配置
 

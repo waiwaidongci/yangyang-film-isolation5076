@@ -18,3 +18,14 @@ class RunInfo(BaseModel):
     status: RunStatus
     settings: dict
     decision: str | None
+    source_version: int | None = 1
+    version: int | None = 1
+    basis_version: int | None = 1
+    basis_digest: str | None = None
+    digest: str | None = None
+    basis_hash: str | None = None
+    fingerprint: str | None = None
+    is_current: bool | None = True
+    verification_status: str | None = None
+    superseded: bool | None = False
+    superseded_by_id: int | None = None

@@ -9,7 +9,9 @@ from src.utils.csv_files import read_rows
 
 
 def overview(dataset):
-    return {'id': dataset.id, 'name': dataset.name, 'checksum': dataset.checksum, 'count': len(dataset.rows)}
+    return {'id': dataset.id, 'name': dataset.name, 'checksum': dataset.checksum,
+            'count': len(dataset.rows), 'version': getattr(dataset, 'version', 1),
+            'updated_at': getattr(dataset, 'updated_at', None)}
 
 
 def list_datasets(session):
@@ -26,7 +28,8 @@ def get_dataset(session, dataset_id):
 def add_dataset(session, name, rows, owner):
     normalized = normalize_rows(rows)
     encoded = json.dumps(normalized, ensure_ascii=False, sort_keys=True, allow_nan=False).encode()
-    dataset = Dataset(name=name, rows=normalized, checksum=hashlib.sha256(encoded).hexdigest(), created_by=owner)
+    dataset = Dataset(name=name, rows=normalized, checksum=hashlib.sha256(encoded).hexdigest(),
+                      created_by=owner, version=1)
     session.add(dataset)
     session.flush()
     return dataset
